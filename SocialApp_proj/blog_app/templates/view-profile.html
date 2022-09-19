@@ -1,0 +1,48 @@
+
+{%extends 'base.html'%}
+{%block body_block%}
+<div class="container bg-light border">
+    <div class="row mt-5 ">
+        <div class="col-4"></div>
+        <div class="col-md-4 col-sm-12  ">
+            <div class="card " style="width: 18rem;">
+               <img src="{{request.user.users.profile_pic.url}}" class="card-img-top" alt="..." style="height:300px;">
+                   <div class="card-body">
+                      <h5 class="card-title">{{request.user}}</h5>
+                      <p class="card-text">{{request.user.users.bio}}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">{{request.user.users.phone}}</li>
+    <li class="list-group-item">{{request.user.users.date_of_birth}}</li>
+    <li class="list-group-item">{{request.user.users.gender}}</li>
+<!--      #follower listing-->
+
+      <li class="list-group-item">Following( {{request.user.users.fetch_following_count}} )
+
+          <br>
+
+           {%for user in request.user.users.fetch_following%}
+                {{user}}
+           {%endfor%}
+      </li>
+
+<!--      my followers-->
+
+
+        <li class="list-group-item">Followers( {{request.user.users.my_follower_count}} )</li>
+<!--           {%for user in request.user.users.get_followers%}-->
+<!--                {{user}}-->
+<!--           {%endfor%}-->
+
+  </ul>
+
+  <div class="card-body">
+<!--    <a href="#" class="card-link">Card link</a>&ndash;&gt;-->
+    <a href="{%url 'profile-update' request.user.users.id%}" class="card-link"> Update Profile</a>
+  </div>
+</div>
+        </div>
+        <div class="col-4"></div>
+    </div>
+</div>
+{%endblock%}

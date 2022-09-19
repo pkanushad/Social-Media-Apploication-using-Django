@@ -1,0 +1,16 @@
+{%extends 'base.html'%}
+{%block body_block%}
+<h2>Update Profile</h2>
+<div class="row ">
+    <div class="col-4"></div>
+    <div class="col-md-4 col-sm-12  bg-light border">
+          <form class="" action="" method="post" enctype="multipart/form-data">
+                {%csrf_token%}
+                {{form.as_p}}
+                <input type="submit" class="btn btn-dark">
+            </form>
+    </div>
+    <div class="col-4"></div>
+
+</div>
+{%endblock%}

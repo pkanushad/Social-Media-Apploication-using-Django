@@ -1,0 +1,117 @@
+{%extends 'base.html'%}
+{%block body_block%}
+<div class="container">
+    <div class="row bg-light">
+    <div class="col-4 "></div>
+    <div class="col-md-4 col-sm-12">
+        <h1>Welcome {{request.user}}</h1>
+    </div>
+    <div class="col-4"></div>
+</div>
+</div>
+
+<div class="row bg-light">
+    <div class="col-md-4 col-sm-12  ">
+
+        <!--        user details in home page-->
+        <div class="card " style="width: 18rem;">
+            <!--               <img src="{{request.user.users.profile_pic.url}}" class="card-img-top" alt="..." style="height:300px;">-->
+            <div class="card-body">
+                <h5 class="card-title">Hey,<span style="color:#483D8B">{{request.user}}</span></h5>
+                <p class="card-text">Bio:{{request.user.users.bio}}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Mob:{{request.user.users.phone}}</li>
+                <li class="list-group-item">DOB:{{request.user.users.date_of_birth}}</li>
+                <li class="list-group-item">Gender:{{request.user.users.gender}}</li>
+                <!--      #follower listing-->
+                <li class="list-group-item">Following( {{request.user.users.fetch_following_count}} )
+                    <br>
+                    {%for user in request.user.users.fetch_following%}
+                    {{user}}
+                    {%endfor%}
+                </li>
+
+                <!--      my followers-->
+                <li class="list-group-item">Followers( {{request.user.users.my_follower_count}} )</li>
+                <!--           {%for user in request.user.users.get_followers%}-->
+                <!--                {{user}}-->
+                <!--           {%endfor%}-->
+
+            </ul>
+            <div class="card-body">
+                <!--    <a href="#" class="card-link">Card link</a>&ndash;&gt;-->
+                <a href="{%url 'profile-update' request.user.users.id%}" class="card-link"> Update Profile</a>
+            </div>
+        </div>
+        <!--        end of user details in home-->
+    </div>
+
+    <div class="col-md-4 col-sm-12  bg-white border mt-2 rounded">
+        <form action="" method="post" enctype="multipart/form-data">
+            {%csrf_token%}
+            {{form.as_p}}
+            <input type="submit " class="btn btn-secondary btn-sm" value="Post">
+        </form>
+    </div>
+    <div class="col-md-4 col-sm-12 ">
+<!--        follow friends suggestions-->
+        {{request.user.users.get_invitation}}
+        {%if request.user.users.get_invitation%}
+        <h5>You may Knows</h5>
+        {%for user in request.user.users.get_invitation%}
+
+        <div class="card m-1" style="width:12rem;">
+            <img class="card-img-top"
+                 src="{{user.users.profile_pic.url}}"
+                 alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{user}}</h5>
+                <p class="card-text">2 mutal friends</p>
+
+                <a href="{%url 'follow-friend' user.id%}">Follow</a>
+            </div>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+{%for blog in blogs%}
+<div class="row bg-light ">
+    <div class="col-4 "></div>
+    <div class="col-md-4 col-sm-12  bg-white border mt-2 rounded">
+        <p>{{blog.title}}</p>
+        {%if blog.image%}
+        <img src="{{blog.image.url}}" class="img-fluid" alt="">
+        <p>Posted by:{{blog.author}}</p>
+        <p>Created at:{{blog.posted_date}}</p>
+
+        <!--# likes and counts -->
+<!--        <i class="fa-solid fa-thumbs-up"></i> # copied code from online class-->
+        <div>
+            <a href="{%url 'add-like' blog.id%}"><i class="fas fa-thumbs-up"></i> </a>
+            {{blog.get_like_count}}
+            {{blog.get_liked_users}}
+
+        </div>
+
+
+        <form action="{%url 'add-comment' blog.id%}" method="post">
+            {%csrf_token%}
+            {{comment_form.as_p}}
+            <input type="submit" class="btn btn-info" value="Post"></input>
+        </form>
+<!--         listing all comments-->
+        {%for comment in blog.comments_set.all%}
+        <div>{{comment.comment}}</div>
+        <div>Commended by: <span style="" >{{comment.user}} </span></div>
+        {%endfor%}
+
+        {%endif%}
+    </div>
+    <div class="col-4"></div>
+</div>
+{%endfor%}
+
+{%endblock%}
